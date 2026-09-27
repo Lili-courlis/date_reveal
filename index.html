@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <title>Dossier confidentiel</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 28%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,.04), transparent 30%),
+        #0b0b0d;
+      color: #f5f1e8;
+      font-family: Georgia, "Times New Roman", serif;
+      overflow-x: hidden;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .06;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+      z-index: 10;
+    }
+
+    .card {
+      width: min(520px, 100%);
+      padding: 42px 34px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      background: rgba(19,19,22,.92);
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: appear .8s ease both;
+    }
+
+    .symbol {
+      font-size: 34px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      font-size: 11px;
+      opacity: .58;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 7vw, 42px);
+      font-weight: normal;
+    }
+
+    .intro {
+      color: #c9c3b8;
+      line-height: 1.65;
+      margin: 0 auto 28px;
+      max-width: 390px;
+    }
+
+    form {
+      text-align: left;
+      margin-top: 24px;
+    }
+
+    label {
+      display: block;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 17px 0 8px;
+      color: #b9b3a8;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #3a3a40;
+      border-radius: 9px;
+      background: #101013;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      border-color: #aaa29a;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: #f2eee5;
+      color: #111;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .2s, opacity .2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      min-height: 22px;
+      color: #d99a9a;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      text-align: center;
+      margin: 14px 0 0;
+    }
+
+  .secret {
+  display: none;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.secret.show {
+  display: flex;
+  animation: reveal 1.2s ease both;
+}
+
+.photo-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* On enlève le voile sombre */
+.photo-background::after {
+  display: none;
+}
+
+.photo-background img {
+  position: absolute;
+  width: 260px;
+  height: 190px;
+  object-fit: cover;
+  border: 8px solid #f5f1e8;
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+  opacity: 1;
+  z-index: 0;
+}
+
+.secret .card {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  width: min(720px, 100%);
+  padding: 55px 34px;
+}
+
+    .secret h1 {
+      font-size: clamp(32px, 8vw, 54px);
+      line-height: 1.12;
+      margin: 8px auto 24px;
+    }
+
+    .secret .message {
+      color: #d7d1c6;
+      font-size: 17px;
+      line-height: 1.8;
+      max-width: 570px;
+      margin: 0 auto;
+    }
+
+    .names {
+      margin: 30px 0;
+      font-size: clamp(24px, 6vw, 34px);
+      line-height: 1.5;
+    }
+
+    .question {
+      margin-top: 34px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      font-size: clamp(21px, 5vw, 29px);
+      line-height: 1.4;
+    }
+
+    .heart {
+      font-size: 42px;
+      margin-top: 24px;
+      animation: heartbeat 1.7s ease-in-out infinite;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: #77736c;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: scale(.97) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.12); }
+      30% { transform: scale(1); }
+    }
+
+    .shake {
+      animation: shake .35s ease;
+    }
+
+    @keyframes shake {
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 34px 22px; }
+    }
+
+    .photo-background {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #0b0b0d;
+    }
+
+    .photo-background::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 13, 0.20);
+    }
+
+    .photo-background img {
+      position: absolute;
+      width: 260px;
+      height: 190px;
+      object-fit: cover;
+      border: 8px solid #f5f1e8;
+      box-shadow: 0 15px 40px rgba(0,0,0,.5);
+      opacity: .7;
+    }
+
+    /* Position des différentes photos */
+
+    .photo-background img:nth-child(1) {
+      top: 5%;
+      left: 5%;
+      transform: rotate(-8deg);
+    }
+
+    .photo-background img:nth-child(2) {
+      top: 8%;
+      right: 5%;
+      transform: rotate(7deg);
+    }
+
+    .photo-background img:nth-child(3) {
+      bottom: 5%;
+      left: 4%;
+      transform: rotate(6deg);
+    }
+
+    .photo-background img:nth-child(4) {
+      bottom: 8%;
+      right: 5%;
+      transform: rotate(-7deg);
+    }
+
+    .photo-background img:nth-child(5) {
+      top: 40%;
+      left: -70px;
+      transform: rotate(-5deg);
+    }
+
+    .photo-background img:nth-child(6) {
+      top: 42%;
+      right: -70px;
+      transform: rotate(5deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <!-- PAGE DE CONNEXION -->
+  <main id="loginPage" class="card">
+    <div class="symbol">🔐</div>
+    <div class="eyebrow">Dossier confidentiel</div>
+    <h1>Accès restreint</h1>
+
+    <p class="intro">
+      Ce dossier contient une information importante.<br>
+      Seules les personnes concernées sont autorisées à y accéder.
+    </p>
+
+    <form id="loginForm">
+      <label for="login">Nom de code</label>
+      <input id="login" type="text" autocomplete="off" placeholder="Votre nom de code" required>
+
+      <label for="password">Mot de passe</label>
+      <input id="password" type="password" autocomplete="off" placeholder="Votre mot de passe" required>
+
+      <button type="submit">Accéder au dossier</button>
+
+      <p id="error" class="error" aria-live="polite"></p>
+    </form>
+
+    <div class="footer">Classification : très, très importante</div>
+  </main>
+
+  <!-- PAGE SECRÈTE -->
+  <main id="secretPage" class="secret">
+
+    <div class="photo-background">
+      <img src="images/LisaT1.jpg">
+      <img src="images/LisaT2.jpg">
+      <img src="images/LisaT3.jpg">
+      <img src="images/LisaT4.jpg">
+      <img src="images/LisaT5.jpg">
+      <img src="images/LisaT6.jpg">
+    </div>
+
+    <section class="card">
+      
+      <div class="eyebrow">Dossier déclassifié</div>
+
+      <h1>Une mission très spéciale</h1>
+
+      <p class="message">
+        Coucou Choupi ! ❤️
+      </p>
+
+      <p class="message">
+        Après s’être remémoré quelques souvenirs et avoir déchiffré mon énigme,
+        il est désormais temps pour moi de te poser une question...
+      </p>
+
+      <p class="message">
+        Cela me ferait tellement plaisir que tu continues à partager
+        les moments importants de ma vie.
+      </p>
+
+      <p class="message">
+        J’espère que tu es disponible les
+        <strong>21 août et 4 septembre 2027</strong>...
+      </p>
+
+      <div class="question">
+        Accepterais-tu<br>
+        <strong>d’être ma témoin de mariage ?</strong>
+      </div>
+
+      <div class="heart">❤️</div>
+
+      
+
+  </main>
+
+  <script>
+    /*
+      ==========================================================
+      PERSONNALISATION
+      ==========================================================
+
+      MODIFIE UNIQUEMENT CES 4 VALEURS.
+
+      Exemple :
+        login    = "frereetsoeur"
+        password = "notremariage"
+
+      Attention : sur GitHub Pages, ces informations sont visibles
+      dans le code source. C'est parfait pour un jeu/une surprise,
+      mais ce n'est PAS une vraie protection de sécurité.
+    */
+
+    const IDENTIFIANTS = {
+      login: "choupi",
+      password: "lisettelisou"
+    };
+
+    const form = document.getElementById("loginForm");
+    const loginPage = document.getElementById("loginPage");
+    const secretPage = document.getElementById("secretPage");
+    const error = document.getElementById("error");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const login = document.getElementById("login").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (login === IDENTIFIANTS.login && password === IDENTIFIANTS.password) {
+        loginPage.style.display = "none";
+        secretPage.classList.add("show");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        error.textContent = "Accès refusé. Vérifiez vos identifiants.";
+        loginPage.classList.remove("shake");
+        void loginPage.offsetWidth;
+        loginPage.classList.add("shake");
+      }
+    });
+  </script>
+</body>
+</html>
