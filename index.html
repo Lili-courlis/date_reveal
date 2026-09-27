@@ -210,12 +210,47 @@
       line-height: 1.5;
     }
 
-    .question {
+        .question {
       margin-top: 34px;
       padding-top: 30px;
       border-top: 1px solid rgba(255,255,255,.12);
       font-size: clamp(21px, 5vw, 29px);
       line-height: 1.4;
+    }
+
+    /* ==============================
+       COMPTE À REBOURS
+       ============================== */
+
+    .countdown {
+      margin: 34px auto 0;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      text-align: center;
+    }
+
+    .countdown-label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #b9b3a8;
+      margin-bottom: 10px;
+    }
+
+    .countdown-value {
+      font-size: clamp(42px, 10vw, 64px);
+      line-height: 1;
+      font-weight: normal;
+      margin: 0;
+      text-shadow: 0 4px 18px rgba(0,0,0,.25);
+    }
+
+    .countdown-date {
+      margin-top: 10px;
+      color: #d7d1c6;
+      font-size: 15px;
+      letter-spacing: .04em;
     }
 
     .heart {
@@ -395,9 +430,27 @@
         <strong>21 août et 4 septembre 2027</strong>...
       </p>
 
-      <div class="question">
+         <div class="question">
         Accepterais-tu<br>
         <strong>d’être ma témoin de mariage ?</strong>
+      </div>
+
+      <!-- COMPTE À REBOURS -->
+
+      <div class="countdown" aria-live="polite">
+
+        <div class="countdown-label">
+          Le grand jour approche...
+        </div>
+
+        <div id="countdownValue" class="countdown-value">
+          J-...
+        </div>
+
+        <div class="countdown-date">
+          4 septembre 2027
+        </div>
+
       </div>
 
       <div class="heart">❤️</div>
@@ -432,6 +485,54 @@
     const loginPage = document.getElementById("loginPage");
     const secretPage = document.getElementById("secretPage");
     const error = document.getElementById("error");
+
+        /*
+      ==========================================================
+      COMPTE À REBOURS DU MARIAGE
+      ==========================================================
+    */
+
+    const countdownValue =
+      document.getElementById("countdownValue");
+
+    // Date du mariage : 4 septembre 2027
+    const weddingDate =
+      new Date("2027-09-04T00:00:00");
+
+    function updateCountdown() {
+
+      const now = new Date();
+
+      const difference =
+        weddingDate - now;
+
+      // Si la date du mariage est arrivée
+      if (difference <= 0) {
+
+        countdownValue.textContent =
+          "C'EST LE GRAND JOUR !";
+
+        return;
+      }
+
+      // Nombre de jours restants
+      const days =
+        Math.ceil(
+          difference / (1000 * 60 * 60 * 24)
+        );
+
+      countdownValue.textContent =
+        "J-" + days;
+    }
+
+    // Affichage immédiat
+    updateCountdown();
+
+    // Mise à jour automatique
+    setInterval(
+      updateCountdown,
+      1000
+    );
 
     form.addEventListener("submit", function(event) {
       event.preventDefault();
