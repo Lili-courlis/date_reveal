@@ -378,17 +378,14 @@
       Seules les personnes concernées sont autorisées à y accéder.
     </p>
 
-    <form id="loginForm">
-      <label for="login">Nom de code</label>
-      <input id="login" type="text" autocomplete="off" placeholder="Votre nom de code" required>
+   <form id="loginForm">
+  <label for="password">Mot de passe</label>
+  <input id="password" type="password" autocomplete="off" placeholder="Votre mot de passe" required>
 
-      <label for="password">Mot de passe</label>
-      <input id="password" type="password" autocomplete="off" placeholder="Votre mot de passe" required>
+  <button type="submit">Accéder au dossier</button>
 
-      <button type="submit">Accéder au dossier</button>
-
-      <p id="error" class="error" aria-live="polite"></p>
-    </form>
+  <p id="error" class="error" aria-live="polite"></p>
+</form>
 
     <div class="footer">Classification : très, très importante</div>
   </main>
@@ -476,10 +473,8 @@
       mais ce n'est PAS une vraie protection de sécurité.
     */
 
-    const IDENTIFIANTS = {
-      login: "parlez ami et entrez",
-      password: "mariage"
-    };
+    const MOT_DE_PASSE = "mariage";
+
 
     const form = document.getElementById("loginForm");
     const loginPage = document.getElementById("loginPage");
@@ -537,20 +532,19 @@
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
-      const login = document.getElementById("login").value.trim();
       const password = document.getElementById("password").value;
 
-      if (login === IDENTIFIANTS.login && password === IDENTIFIANTS.password) {
-        loginPage.style.display = "none";
-        secretPage.classList.add("show");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        error.textContent = "Accès refusé. Vérifiez vos identifiants.";
-        loginPage.classList.remove("shake");
-        void loginPage.offsetWidth;
-        loginPage.classList.add("shake");
-      }
-    });
+  if (password === MOT_DE_PASSE) {
+    loginPage.style.display = "none";
+    secretPage.classList.add("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    error.textContent = "Accès refusé. Vérifiez le mot de passe.";
+    loginPage.classList.remove("shake");
+    void loginPage.offsetWidth;
+    loginPage.classList.add("shake");
+  }
+});
   </script>
 </body>
 </html>
